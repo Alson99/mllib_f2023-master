@@ -33,7 +33,6 @@ class BaseDataset(ABC):
         num_try = len(self.targets)
         num_train_try = int(num_try * self.train_set_percent)
         num_valid_try = int(num_try * self.valid_set_percent)
-        # num_test_try = num_try - num_train_try - num_valid_try
 
         # Shuffle the data randomly before dividing
         indices = np.arange(num_try)
@@ -46,5 +45,4 @@ class BaseDataset(ABC):
         self.inputs_valid = self.inputs[indices[num_train_try:num_train_try + num_valid_try]]
         self.targets_valid = self.targets[indices[num_train_try:num_train_try + num_valid_try]]
 
-        # self.inputs_test = self.inputs[indices[num_try + num_valid_try:]]
-        # self.targets_test = self.targets[indices[num_train_try + num_valid_try:]]
+
