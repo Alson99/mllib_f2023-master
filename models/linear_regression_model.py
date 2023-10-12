@@ -10,7 +10,7 @@ import cloudpickle
 class LinearRegression():
 
     def __init__(self, base_functions: list, learning_rate: float, reg_coefficient: float, experiment_name: str):
-        self.weights = np.random.randn(len(batlee_functions) + 1)
+        self.weights = np.random.randn(len(base_functions) + 1)
         self.base_functions = base_functions
         self.learning_rate = learning_rate
         self.reg_coefficient = reg_coefficient
@@ -176,7 +176,18 @@ class LinearRegression():
             TODO: Implement this method using matrix operations in numpy. a.T - transpose. Do not use loops
             TODO: Add regularisation
             """
-        pass
+        # Let's calculate the gradient
+        N = plan_matrix.shape[0] # Number of data points
+        prediction = np.dot(plan_matrix, self.weights) # fi * w
+        error = prediction - targets
+        gradient = (2 / N) * np.dot(plan_matrix.T, error)
+
+        # Add the regularization
+        if self.reg_coefficient > 0:
+            regularization_term = 2 * self.reg_coefficient * self.weights
+            gradient += regularization_term
+
+        return gradient
 
     def calculate_cost_function(self, plan_matrix, targets):
         """Calculate the cost function value for the current weights.
@@ -199,7 +210,17 @@ class LinearRegression():
         TODO: Add regularisation
 
         """
-        pass
+        N = plan_matrix.shape[0]
+        prediction = np.dot(plan_matrix, self.weights)
+        error = targets - prediction
+        E = (1 / N) * np.sum(error ** 2)
+
+        if self.reg_coefficient > 0:
+            regularization_term = self.reg_coefficient * np.dot(self.weights, self.weights)
+            cost_function = E + regularization_term
+        else:
+            cost_function = E
+        return cost_function
 
     def train(self, inputs: np.ndarray, targets: np.ndarray) -> None:
         """Train the model using either the normal equation or gradient descent based on the configuration.
@@ -226,10 +247,12 @@ class LinearRegression():
             for e in cfg.epoch:
                 gradient = self._calculate_gradient(plan_matrix, targets)
                 # update weights w_{k+1} = w_k - γ * ∇_w E(w_k)
+                self.weights -= self.learning_rate * gradient
 
                 if e % 10 == 0:
                     # TODO: Print the cost function's value.
-                    pass
+                    cost = self.calculate_cost_function(plan_matrix, targets)
+                    print(f'Epoch {e}: Cost = {cost}')
 
     def __call__(self, inputs: np.ndarray) -> np.ndarray:
         """return prediction of the model"""

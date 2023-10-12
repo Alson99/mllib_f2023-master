@@ -1,7 +1,8 @@
 import numpy as np
+from numpy import ndarray
 
 
-def MSE(predictions: np.ndarray, targets: np.ndarray) -> float:
+def MSE(predictions: np.ndarray, targets: np.ndarray) -> ndarray:
     """ Compute the Mean Squared Error (MSE) between predictions and targets.
 
     The Mean Squared Error is a measure of the average squared difference
@@ -18,5 +19,8 @@ def MSE(predictions: np.ndarray, targets: np.ndarray) -> float:
     TODO implement this function. This function is expected to be implemented without the use of loops.
 
     """
+    squared = (predictions - targets) ** 2
+    mse = np.mean(squared)
 
-    pass
+    return mse
+
